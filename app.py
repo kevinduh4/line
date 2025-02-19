@@ -28,23 +28,10 @@ def callback():
         abort(400)
     return "OK"
 
-# ---------------加好友後發訊息
-
-@handler.add(FollowEvent)
-def handle_follow(event):
-    # 用戶加為好友後，發送歡迎訊息
-    line_bot_api.reply_message(
-        event.reply_token,
-        TextSendMessage(text="你好，我是凱程鬧鐘，我會提醒你準時收看，鐵漢柔情!王凱程!")
-    )
 
 
-# -------------講話對應特定功能
-# @handler.add(MessageEvent, message=TextMessage)
-# def handle_message(event):
-#     user_msg = event.message.text
-#     reply_msg = f"你剛剛說了：{user_msg}"
-#     line_bot_api.reply_message(event.reply_token, TextSendMessage(text=reply_msg))
+
+
 
 # 讀取 JSON 檔案中的圖片 URL
 def load_image_gallery():
@@ -68,6 +55,22 @@ image_responses = {
     "陳重羽": "https://imgur.com/a/UJAaseV",  # 替換為實際的圖片 URL
     "跨": "https://imgur.com/a/a0Hqtj9"  # 替換為實際的圖片 URL
 }
+
+
+
+
+
+# ---------------加好友後發訊息
+@handler.add(FollowEvent)
+def handle_follow(event):
+    # 用戶加為好友後，發送歡迎訊息
+    line_bot_api.reply_message(
+        event.reply_token,
+        TextSendMessage(text="你好，我是凱程鬧鐘，我會提醒你準時收看，\n鐵漢柔情!王凱程!")
+    )
+
+
+
 
 @handler.add(MessageEvent, message=TextMessage)
 def handle_message(event):
@@ -124,4 +127,5 @@ def handle_message(event):
     line_bot_api.reply_message(event.reply_token, TextSendMessage(text=reply_msg))
 
 if __name__ == "__main__":
-    app.run(port=5000, debug=True)
+    port = int(os.environ.get("PORT", 5000))  # 預設 5000，但 Render 會動態設定 PORT
+    app.run(host="0.0.0.0", port=port)
