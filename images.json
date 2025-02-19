@@ -1,11 +1,12 @@
 {
     "image_gallery": [
-      "https://imgur.com/a/syryd3q",
-      "https://imgur.com/a/txWNTKB",
-      "https://imgur.com/a/5a7pwHR",
-      "https://imgur.com/a/JSBBM7v",
-      "https://imgur.com/a/fHbaN9Q",
-      "https://imgur.com/a/FP6cMvt"
+      "https://i.imgur.com/3qyzX98.jpeg",
+      "https://i.imgur.com/5gVvP7i.jpeg",
+      "https://i.imgur.com/whKVLlv.jpeg",
+      "https://i.imgur.com/Lt7mcoB.jpeg",
+      "https://i.imgur.com/f5qJpyU.jpeg",
+      "https://i.imgur.com/ek8zJhC.jpeg"
     ],
      "_comment": "這些是凱程性感圖URL，當用戶輸入 '抽' 時會從中選擇一張圖片回傳"
   }
+ 
