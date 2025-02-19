@@ -48,12 +48,13 @@ text_responses = {
 }
 
 audio_responses = {
-    "asmr": "https://on.soundcloud.com/zR6SWtgavphGNJ1z5"
+    # "asmr": "https://on.soundcloud.com/zR6SWtgavphGNJ1z5"
+    "asmr" : "https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/2037688880&color=%23ff5500&auto_play=false&hide_related=false&show_comments=true&show_user=true&show_reposts=false&show_teaser=true&visual=true"
 }
 
 image_responses = {
-    "陳重羽": "https://imgur.com/a/UJAaseV",  # 替換為實際的圖片 URL
-    "跨": "https://imgur.com/a/a0Hqtj9"  # 替換為實際的圖片 URL
+    "陳重羽": "https://i.imgur.com/8zghr6d.jpeg",  # 替換為實際的圖片 URL
+    "跨": "https://i.imgur.com/Nc9DaqP.png"  # 替換為實際的圖片 URL
 }
 
 
@@ -98,7 +99,7 @@ def handle_message(event):
                 event.reply_token,
                 AudioSendMessage(
                     original_content_url=audio_url,
-                    duration=60000  # 設定音訊持續時間（以毫秒為單位），這裡設為 1 分鐘
+                    duration=20000  # 設定音訊持續時間（以毫秒為單位），這裡設為 1 分鐘
                 )
             )
         except LineBotApiError as e:
