@@ -49,7 +49,7 @@ text_responses = {
 
 audio_responses = {
     # "asmr": "https://on.soundcloud.com/zR6SWtgavphGNJ1z5"
-    "asmr" : "https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/2037688880&color=%23ff5500&auto_play=false&hide_related=false&show_comments=true&show_user=true&show_reposts=false&show_teaser=true&visual=true"
+    "asmr" : "https://dl.dropboxusercontent.com/scl/fi/n663bzcn4itd3notonu0g/asmr_final-online-audio-converter.com.m4a?rlkey=puiw8cvvvkh892uxvcajcvc04"
 }
 
 image_responses = {
