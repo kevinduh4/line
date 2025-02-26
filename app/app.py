@@ -77,22 +77,19 @@ def handle_follow(event):
         TextSendMessage(text="你好，我是凱程鬧鐘，我會提醒你準時收看，\n鐵漢柔情!王凱程!")
     )
 
+
+
 # --------------爬蟲，凱程ig發文便推送
 @app.route("/notify_ig_post", methods=["POST"])
 def notify_ig_post():
-    """接收 GitHub Actions 傳來的 IG 貼文資訊，並透過 LINE Bot 發送通知"""
-    data = request.json
-    if not data or "post_url" not in data:
-        return jsonify({"error": "Invalid data"}), 400
-
-    post_url = data["post_url"]
-    message = f"🎉 目標 IG 帳號今天有新貼文！\n{post_url}"
+    data = request.get_json()
+    message = data.get("message", "Instagram 爬蟲通知失敗")
 
     try:
         line_bot_api.push_message(LINE_USER_ID, TextSendMessage(text=message))
-        return jsonify({"status": "success"}), 200
+        return jsonify({"status": "success", "message": "通知已發送"}), 200
     except Exception as e:
-        return jsonify({"error": str(e)}), 500
+        return jsonify({"status": "error", "message": str(e)}), 500
     
     
 
@@ -152,6 +149,9 @@ def handle_message(event):
     # 默認文字回應
     reply_msg = text_responses.get(user_msg, "抱歉，凱程忙著重訓，現在無法抽空回應，\n請繼續支持鐵漢柔情!王凱程!")
     line_bot_api.reply_message(event.reply_token, TextSendMessage(text=reply_msg))
+
+
+
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))  # 預設 5000，但 Render 會動態設定 PORT
