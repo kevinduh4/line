@@ -1,0 +1,40 @@
+name: Daily Instagram Scraper
+
+on:
+  schedule:
+    - cron: "30 3 * * *"  # 每天台灣時間 11:30 AM 執行
+  workflow_dispatch:  # 允許手動觸發
+
+jobs:
+  scrape_instagram:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 檢查 Repository
+        uses: actions/checkout@v4
+
+      - name: 設定 Python 環境
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.9"
+
+      - name: 安裝 Instaloader
+        run: pip install instaloader
+
+      - name: 執行 Instagram 爬蟲
+        run: |
+          # 執行 Instaloader 來檢查最新貼文
+          LAST_POST=$(instaloader --login=$IG_USERNAME --password=$IG_PASSWORD --no-captions --no-metadata-json --fast-update --quiet --latest-stamps -- "${TARGET_IG_USERNAME}" | tail -n 1 | awk '{print $NF}')
+          
+          # 如果找到了新貼文，發送通知
+          if [[ ! -z "$LAST_POST" ]]; then
+            echo "發現新貼文: $LAST_POST"
+            curl -X POST "$RENDER_API_URL" -H "Content-Type: application/json" -d "{\"post_url\": \"$LAST_POST\"}"
+          else
+            echo "沒有新貼文"
+          fi
+        env:
+          IG_USERNAME: ${{ secrets.IG_USERNAME }}
+          IG_PASSWORD: ${{ secrets.IG_PASSWORD }}
+          TARGET_IG_USERNAME: ${{ secrets.TARGET_IG_USERNAME }}
+          RENDER_API_URL: ${{ secrets.RENDER_API_URL }}

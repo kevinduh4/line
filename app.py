@@ -1,4 +1,4 @@
-from flask import Flask, request, abort
+from flask import Flask, request, abort, jsonify
 from linebot import LineBotApi, WebhookHandler
 from linebot.exceptions import InvalidSignatureError
 from linebot.models import MessageEvent, TextMessage, TextSendMessage, FollowEvent, ImageSendMessage, AudioSendMessage
@@ -17,6 +17,13 @@ LINE_CHANNEL_SECRET = os.getenv("LINE_CHANNEL_SECRET")
 
 line_bot_api = LineBotApi(LINE_CHANNEL_ACCESS_TOKEN)
 handler = WebhookHandler(LINE_CHANNEL_SECRET)
+
+# 你的 LINE 使用者 ID
+LINE_USER_ID = os.getenv("LINE_USER_ID")
+
+
+
+
 
 @app.route("/webhook", methods=["POST"])
 def webhook():
@@ -70,8 +77,27 @@ def handle_follow(event):
         TextSendMessage(text="你好，我是凱程鬧鐘，我會提醒你準時收看，\n鐵漢柔情!王凱程!")
     )
 
+# --------------爬蟲，凱程ig發文便推送
+@app.route("/notify_ig_post", methods=["POST"])
+def notify_ig_post():
+    """接收 GitHub Actions 傳來的 IG 貼文資訊，並透過 LINE Bot 發送通知"""
+    data = request.json
+    if not data or "post_url" not in data:
+        return jsonify({"error": "Invalid data"}), 400
+
+    post_url = data["post_url"]
+    message = f"🎉 目標 IG 帳號今天有新貼文！\n{post_url}"
+
+    try:
+        line_bot_api.push_message(LINE_USER_ID, TextSendMessage(text=message))
+        return jsonify({"status": "success"}), 200
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+    
+    
 
 
+# ------------------回覆訊息功能
 
 @handler.add(MessageEvent, message=TextMessage)
 def handle_message(event):
