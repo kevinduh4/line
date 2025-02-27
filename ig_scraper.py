@@ -16,7 +16,7 @@ taiwan_tz = timezone(timedelta(hours=8))
 
 def get_latest_posts():
     loader = instaloader.Instaloader()
-    loader.login(IG_USERNAME, IG_PASSWORD)  # 登入 IG
+    # loader.login(IG_USERNAME, IG_PASSWORD)  # 登入 IG
     profile = instaloader.Profile.from_username(loader.context, TARGET_IG_USERNAME)
 
     now = datetime.now(taiwan_tz)
