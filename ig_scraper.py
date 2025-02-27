@@ -14,9 +14,22 @@ TARGET_IG_USERNAME = os.getenv("TARGET_IG_USERNAME")
 # 設定台灣時區
 taiwan_tz = timezone(timedelta(hours=8))
 
+loader = instaloader.Instaloader(
+    sleep=True,  # 在請求間加入隨機延遲
+    quiet=True,  # 減少日誌輸出
+    max_connection_attempts=3  # 增加重試次數
+)
+
+loader.context._session.headers.update({
+    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
+})
+
+loader.login(IG_USERNAME, IG_PASSWORD)  # 登入 IG
+
+
 def get_latest_posts():
-    loader = instaloader.Instaloader(request_timeout=60)
-    # loader.login(IG_USERNAME, IG_PASSWORD)  # 登入 IG
+    
+    
     profile = instaloader.Profile.from_username(loader.context, TARGET_IG_USERNAME)
 
     now = datetime.now(taiwan_tz)
