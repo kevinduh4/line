@@ -15,7 +15,7 @@ TARGET_IG_USERNAME = os.getenv("TARGET_IG_USERNAME")
 taiwan_tz = timezone(timedelta(hours=8))
 
 def get_latest_posts():
-    loader = instaloader.Instaloader()
+    loader = instaloader.Instaloader(request_timeout=60)
     # loader.login(IG_USERNAME, IG_PASSWORD)  # 登入 IG
     profile = instaloader.Profile.from_username(loader.context, TARGET_IG_USERNAME)
 
