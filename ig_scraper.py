@@ -7,8 +7,6 @@ import time
 import shutil
 
 
-
-
 # 讀取環境變數
 IG_USERNAME = os.getenv("IG_USERNAME")
 IG_PASSWORD = os.getenv("IG_PASSWORD")
