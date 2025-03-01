@@ -25,13 +25,13 @@ def get_latest_posts():
     cl = Client()
     cl.set_user_agent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36")
     # 設定額外 Headers（更接近真實瀏覽器）
-    # cl.session.headers.update({
-    #     "Accept-Language": "en-US,en;q=0.5",
-    #     "X-Instagram-AJAX": "1",
-    #     "X-Requested-With": "XMLHttpRequest",
-    #     "Referer": "https://www.instagram.com/",
-    #     "Connection": "keep-alive"
-    # })
+    cl.private.headers.update({
+        "Accept-Language": "en-US,en;q=0.5",
+        "X-Instagram-AJAX": "1",
+        "X-Requested-With": "XMLHttpRequest",
+        "Referer": "https://www.instagram.com/",
+        "Connection": "keep-alive"
+    })
 
     try:
         if os.path.exists("session.json"):
