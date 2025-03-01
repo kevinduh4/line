@@ -24,23 +24,36 @@ def get_latest_posts():
     time.sleep(10)  # 增加延遲時間，避免反爬蟲
     cl = Client()
     cl.set_user_agent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36")
+    # 設定額外 Headers（更接近真實瀏覽器）
+    cl.session.headers.update({
+        "Accept-Language": "en-US,en;q=0.5",
+        "X-Instagram-AJAX": "1",
+        "X-Requested-With": "XMLHttpRequest",
+        "Referer": "https://www.instagram.com/",
+        "Connection": "keep-alive"
+    })
 
     try:
         if os.path.exists("session.json"):
+            print("載入 session.json...")
             cl.load_settings("session.json")
+            print("嘗試驗證 session...")
             cl.login(IG_USERNAME, IG_PASSWORD)
         else:
             raise FileNotFoundError("session.json 不存在，請確保已上傳到倉庫！")
 
+        print(f"抓取 {TARGET_IG_USERNAME} 的貼文...")
         user_id = cl.user_id_from_username(TARGET_IG_USERNAME)
         posts = cl.user_medias(user_id, amount=10)
-        # 當前時間（帶 UTC 時區）
+        if not posts:
+            print("未抓取到貼文，可能是帳號隱私設置或存取權限問題")
+            return []
+
         now = datetime.now(timezone.utc)
         time_threshold = now - timedelta(hours=24)
         new_posts = []
         for post in posts:
             post_time = post.taken_at
-            # 確保 post_time 是 UTC 且帶時區
             if post_time.tzinfo is None:
                 post_time = post_time.replace(tzinfo=timezone.utc)
             if post_time > time_threshold:
