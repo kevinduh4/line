@@ -6,6 +6,8 @@ import json
 import time
 import shutil
 from instagrapi import Client
+import pytz
+
 
 
 # 讀取環境變數
@@ -19,23 +21,26 @@ TARGET_IG_USERNAME = os.getenv("TARGET_IG_USERNAME")
 
 def get_latest_posts():
     print("等待 5 秒以避免速率限制...")
-    time.sleep(5)
+    time.sleep(10)  # 增加延遲時間，避免反爬蟲
     cl = Client()
     try:
-        # 載入 session
         if os.path.exists("session.json"):
             cl.load_settings("session.json")
-            cl.login("IG_USERNAME", "IG_PASSWORD")  # 仍需提供帳號密碼以驗證 session
+            cl.login(IG_USERNAME, IG_PASSWORD)
         else:
             raise FileNotFoundError("session.json 不存在，請確保已上傳到倉庫！")
 
         user_id = cl.user_id_from_username(TARGET_IG_USERNAME)
         posts = cl.user_medias(user_id, amount=10)
-        now = datetime.utcnow()
+        # 當前時間（轉為 UTC 且帶時區）
+        now = datetime.utcnow().replace(tzinfo=pytz.UTC)
         time_threshold = now - timedelta(hours=24)
         new_posts = []
         for post in posts:
             post_time = post.taken_at
+            # 確保 post_time 是 UTC 且帶時區
+            if post_time.tzinfo is None:
+                post_time = post_time.replace(tzinfo=pytz.UTC)
             if post_time > time_threshold:
                 new_posts.append(f"https://www.instagram.com/p/{post.code}/")
         return new_posts
