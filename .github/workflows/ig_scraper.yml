@@ -19,7 +19,7 @@ jobs:
           python-version: "3.9"
 
       - name: 安裝 Instaloader
-        run: pip install instagrapi requests python-dotenv
+        run: pip install instagrapi requests python-dotenv Pillow==8.1.1
 
       - name: 執行 Instagram 爬蟲
         run: python ig_scraper.py
