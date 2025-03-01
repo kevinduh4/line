@@ -23,6 +23,8 @@ def get_latest_posts():
     print("等待 5 秒以避免速率限制...")
     time.sleep(10)  # 增加延遲時間，避免反爬蟲
     cl = Client()
+    cl.set_user_agent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36")
+
     try:
         if os.path.exists("session.json"):
             cl.load_settings("session.json")
@@ -32,15 +34,15 @@ def get_latest_posts():
 
         user_id = cl.user_id_from_username(TARGET_IG_USERNAME)
         posts = cl.user_medias(user_id, amount=10)
-        # 當前時間（轉為 UTC 且帶時區）
-        now = datetime.utcnow().replace(tzinfo=pytz.UTC)
+        # 當前時間（帶 UTC 時區）
+        now = datetime.now(timezone.utc)
         time_threshold = now - timedelta(hours=24)
         new_posts = []
         for post in posts:
             post_time = post.taken_at
             # 確保 post_time 是 UTC 且帶時區
             if post_time.tzinfo is None:
-                post_time = post_time.replace(tzinfo=pytz.UTC)
+                post_time = post_time.replace(tzinfo=timezone.utc)
             if post_time > time_threshold:
                 new_posts.append(f"https://www.instagram.com/p/{post.code}/")
         return new_posts
