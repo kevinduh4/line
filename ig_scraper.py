@@ -6,7 +6,6 @@ import json
 import time
 import shutil
 from instagrapi import Client
-import pytz
 
 
 
