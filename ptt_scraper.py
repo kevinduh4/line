@@ -10,7 +10,7 @@ def get_today_date():
     taiwan_now = utc_now.astimezone(taiwan_tz)
     return taiwan_now.strftime("%Y-%m-%d")
 
-def get_ptt_posts():
+def get_ptt_posts(today):
     base_urls = [
         "https://www.ptt.cc/bbs/baseball/search?q=%E5%87%B1%E7%A8%8B",
         "https://www.ptt.cc/bbs/baseballxxxx/search?q=%E5%87%B1%E7%A8%8B",
