@@ -9,6 +9,7 @@ import random
 import json
 
 
+
 app = Flask(__name__)
 
 # 設定 LINE Bot 的 Channel Access Token 和 Secret
@@ -79,7 +80,7 @@ def handle_follow(event):
 
 
 
-# --------------爬蟲，凱程ig發文便推送
+# --------------爬蟲，凱程ig發文便推送-------壞掉，基本做不到
 @app.route("/notify_ig_post", methods=["POST"])
 def notify_ig_post():
     data = request.get_json()
@@ -92,6 +93,18 @@ def notify_ig_post():
         return jsonify({"status": "error", "message": str(e)}), 500
     
     
+# --------------爬蟲，凱程ptt發文便推送
+@app.route("/notify_ptt_post", methods=["POST"])
+def notify_ptt_post():
+    data = request.get_json()
+    message = data.get("message", "PTT 爬蟲通知失敗")
+
+    try:
+        line_bot_api.push_message(LINE_USER_ID, TextSendMessage(text=message))
+        return jsonify({"status": "success", "message": "通知已發送"}), 200
+    except Exception as e:
+        return jsonify({"status": "error", "message": str(e)}), 500
+
 
 
 # ------------------回覆訊息功能
