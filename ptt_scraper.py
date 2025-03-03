@@ -1,7 +1,12 @@
-import requests
-from bs4 import BeautifulSoup
-from datetime import datetime, timezone, timedelta
 import time
+import random
+from datetime import datetime, timezone, timedelta
+from selenium import webdriver
+from selenium.webdriver.chrome.service import Service
+from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.common.by import By
+from selenium.common.exceptions import NoSuchElementException
+
 
 def get_today_date():
     # 獲取當前 UTC 時間並轉換到台灣時區
@@ -19,39 +24,58 @@ def get_ptt_posts(today):
     matched_posts = []
     max_posts = 10  # 限制最多 5 篇貼文，避免訊息過長
 
-    headers = {
-        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/129.0.0.0 Safari/537.36"
-    }
+    # 設置 Chrome 選項
+    chrome_options = Options()
+    chrome_options.add_argument("--headless")  # 無頭模式，適合 GitHub Actions
+    chrome_options.add_argument("--no-sandbox")  # 必須，GitHub Actions 環境需要
+    chrome_options.add_argument("--disable-dev-shm-usage")  # 避免共享內存問題
+    chrome_options.add_argument("user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/129.0.0.0 Safari/537.36")
+
+    # 初始化 WebDriver
+    driver = webdriver.Chrome(options=chrome_options)
 
 
-
-    for url in base_urls:
+    try:
+        # 先訪問首頁並設置 over18 Cookie
+        driver.get("https://www.ptt.cc/ask/over18")
+        time.sleep(2)  # 等待頁面加載
         try:
-            response = requests.get(url, cookies={"over18": "1"}, headers=headers, timeout=10)  # 添加超時
-            if response.status_code != 200:
-                print(f"無法訪問 {url}，狀態碼：{response.status_code}")
+            yes_button = driver.find_element(By.NAME, "yes")
+            yes_button.click()
+            time.sleep(2)
+        except NoSuchElementException:
+            print("未找到 'over18' 按鈕，可能已經設置過或頁面有變化")
+
+        for url in base_urls:
+            try:
+                driver.get(url)
+                time.sleep(random.uniform(2, 5))  # 模擬真實用戶等待
+
+                # 解析貼文
+                titles = driver.find_elements(By.CLASS_NAME, "title")
+                for title in titles:
+                    try:
+                        a_tag = title.find_element(By.TAG_NAME, "a")
+                        post_title = a_tag.text
+                        post_url = a_tag.get_attribute("href")
+                        post_id = post_url.split('/')[-1].split('.')[1]
+                        post_time = datetime.fromtimestamp(int(post_id), timezone(timedelta(hours=8))).strftime("%Y-%m-%d")
+
+                        if post_time == today:
+                            matched_posts.append(f"{post_title}: {post_url}")
+                            if len(matched_posts) >= max_posts:
+                                break
+                    except Exception as e:
+                        print(f"解析單篇貼文時發生錯誤: {e}")
+                        continue
+
+            except Exception as e:
+                print(f"訪問 {url} 時發生錯誤: {e}")
                 continue
 
-            soup = BeautifulSoup(response.text, "html.parser")
-            
-            for title_div in soup.find_all("div", class_="title"):
-                a_tag = title_div.find("a")
-                if a_tag:
-                    post_url = "https://www.ptt.cc" + a_tag["href"]
-                    post_id = a_tag["href"].split("/")[-1].split(".")[1]
-                    post_time = datetime.fromtimestamp(int(post_id), timezone(timedelta(hours=8))).strftime("%Y-%m-%d")
-                    
-                    if post_time == today:
-                        matched_posts.append(f"{a_tag.text}: {post_url}")
-                        if len(matched_posts) >= max_posts:  # 限制貼文數量
-                            break
-            
-            time.sleep(3)  # 每個看板之間等待，避免過快請求
-        
-        except Exception as e:
-            print(f"訪問 {url} 時發生錯誤: {e}")
-            continue
-    
+    finally:
+        driver.quit()
+
     return matched_posts
 
 def main():

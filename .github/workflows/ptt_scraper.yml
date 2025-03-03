@@ -2,12 +2,13 @@ name: PTT Scraper
 
 on:
   schedule:
-    - cron: "56 23 * * *"  # 每天 23:56 執行
+    - cron: "50 23 * * *"  # 每天 23:50 執行
   workflow_dispatch:  # 允許手動觸發
 
 jobs:
   scrape:
     runs-on: ubuntu-latest
+    timeout-minutes: 10  # 最多執行 10 分鐘
 
     env:
       RENDER_API_URL: ${{ secrets.RENDER_API_URL }}
@@ -21,15 +22,31 @@ jobs:
         with:
           python-version: "3.9"
       
+      - name: 安裝系統依賴（Chrome 和 ChromeDriver）
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y google-chrome-stable
+          # 安裝 ChromeDriver，與 Chrome 版本匹配
+          CHROME_VERSION=$(google-chrome --version | grep -oP '\d+\.\d+\.\d+')
+          CHROMEDRIVER_VERSION=$(curl -sS "https://chromedriver.storage.googleapis.com/LATEST_RELEASE_${CHROME_VERSION%%.*}")
+          wget -q "https://chromedriver.storage.googleapis.com/${CHROMEDRIVER_VERSION}/chromedriver_linux64.zip"
+          unzip chromedriver_linux64.zip
+          sudo mv chromedriver /usr/local/bin/
+          sudo chmod +x /usr/local/bin/chromedriver
+
+
       - name: 安裝依賴
-        run: pip install requests beautifulsoup4
+        run: pip install selenium webdriver-manager
       
       - name: 執行 PTT 爬蟲並捕獲輸出
         run: |
-          python ptt_scraper.py > ptt_output.txt
-
+          python -u ptt_scraper.py > ptt_output.txt 2> ptt_error.txt || true
+      
       - name: 顯示 ptt_output.txt 內容
-        run: cat ptt_output.txt
+        run: cat ptt_output.txt || true
+
+      - name: 顯示 ptt_error.txt 內容
+        run: cat ptt_error.txt || true
       
       - name: 檢查是否有新貼文
         id: check_posts
