@@ -22,17 +22,11 @@ jobs:
         with:
           python-version: "3.9"
       
-      - name: 安裝系統依賴（Chrome 和 ChromeDriver）
+      - name: 安裝系統依賴（只需 Chrome）
         run: |
           sudo apt-get update
           sudo apt-get install -y google-chrome-stable
-          # 安裝 ChromeDriver，與 Chrome 版本匹配
-          CHROME_VERSION=$(google-chrome --version | grep -oP '\d+\.\d+\.\d+')
-          CHROMEDRIVER_VERSION=$(curl -sS "https://chromedriver.storage.googleapis.com/LATEST_RELEASE_${CHROME_VERSION%%.*}")
-          wget -q "https://chromedriver.storage.googleapis.com/${CHROMEDRIVER_VERSION}/chromedriver_linux64.zip"
-          unzip chromedriver_linux64.zip
-          sudo mv chromedriver /usr/local/bin/
-          sudo chmod +x /usr/local/bin/chromedriver
+          google-chrome --version
 
 
       - name: 安裝依賴

@@ -6,6 +6,7 @@ from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
 from selenium.common.exceptions import NoSuchElementException
+from webdriver_manager.chrome import ChromeDriverManager
 
 
 def get_today_date():
@@ -31,8 +32,8 @@ def get_ptt_posts(today):
     chrome_options.add_argument("--disable-dev-shm-usage")  # 避免共享內存問題
     chrome_options.add_argument("user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/129.0.0.0 Safari/537.36")
 
-    # 初始化 WebDriver
-    driver = webdriver.Chrome(options=chrome_options)
+        # 使用 webdriver-manager 自動設置 ChromeDriver
+    driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=chrome_options)
 
 
     try:
