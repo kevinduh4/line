@@ -27,6 +27,9 @@ jobs:
       - name: 執行 PTT 爬蟲並捕獲輸出
         run: |
           python ptt_scraper.py > ptt_output.txt
+
+      - name: 顯示 ptt_output.txt 內容
+        run: cat ptt_output.txt
       
       - name: 檢查是否有新貼文
         id: check_posts

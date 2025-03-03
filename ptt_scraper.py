@@ -17,7 +17,7 @@ def get_ptt_posts(today):
         "https://www.ptt.cc/bbs/elephants/search?q=%E5%87%B1%E7%A8%8B"
     ]
     matched_posts = []
-    max_posts = 5  # 限制最多 5 篇貼文，避免訊息過長
+    max_posts = 10  # 限制最多 5 篇貼文，避免訊息過長
 
     for url in base_urls:
         try:
