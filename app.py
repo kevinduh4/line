@@ -98,6 +98,7 @@ def notify_ig_post():
 def notify_ptt_post():
     data = request.get_json()
     message = data.get("message", "PTT 爬蟲通知失敗")
+    # message = f"今日 PTT 熱議:\n{raw_message}"  # 在開頭新增標題
 
     try:
         line_bot_api.push_message(LINE_USER_ID, TextSendMessage(text=message))

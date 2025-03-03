@@ -63,7 +63,7 @@ def get_ptt_posts(today):
                         post_time = datetime.fromtimestamp(int(post_id), timezone(timedelta(hours=8))).strftime("%Y-%m-%d")
 
                         if post_time == today:
-                            matched_posts.append(f"{post_title}: {post_url}")
+                            matched_posts.append(f"{post_title}\n {post_url}\n")
                             if len(matched_posts) >= max_posts:
                                 break
                     except Exception as e:
@@ -85,7 +85,7 @@ def main():
         today = get_today_date()
         latest_posts = get_ptt_posts(today)
         if latest_posts:
-            print("今天的新貼文：")
+            print("今日 PTT 熱議:")
             for post in latest_posts:
                 print(post)
         else:

@@ -45,7 +45,7 @@ jobs:
       - name: 檢查是否有新貼文
         id: check_posts
         run: |
-          if grep -q "今天的新貼文：" ptt_output.txt; then
+          if grep -q "今日 PTT 熱議:" ptt_output.txt; then
             echo "has_posts=true" >> $GITHUB_OUTPUT
           else
             echo "has_posts=false" >> $GITHUB_OUTPUT
@@ -54,10 +54,10 @@ jobs:
       - name: 將輸出發送到 LINE Bot
         if: steps.check_posts.outputs.has_posts == 'true'
         run: |
-          MESSAGE=$(cat ptt_output.txt | sed 's/"/\\"/g')
-          curl -X POST "$RENDER_API_URL/notify_ptt_post" \
-               -H "Content-Type: application/json" \
-               -d "{\"message\": \"$MESSAGE\"}" || echo "發送失敗，重試中..." && \
-          curl -X POST "$RENDER_API_URL/notify_ptt_post" \
-               -H "Content-Type: application/json" \
-               -d "{\"message\": \"$MESSAGE\"}"
+          MESSAGE=$(jq -Rs . < ptt_output.txt)  # 安全處理 JSON
+          for i in {1..2}; do
+            curl -X POST "$RENDER_API_URL/notify_ptt_post" \
+                 -H "Content-Type: application/json" \
+                 -d "{\"message\": $MESSAGE}" && break || echo "發送失敗，嘗試重試 ($i)"
+            sleep 5
+          done
