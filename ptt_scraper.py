@@ -19,9 +19,15 @@ def get_ptt_posts(today):
     matched_posts = []
     max_posts = 10  # 限制最多 5 篇貼文，避免訊息過長
 
+    headers = {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/129.0.0.0 Safari/537.36"
+    }
+
+
+
     for url in base_urls:
         try:
-            response = requests.get(url, cookies={"over18": "1"}, timeout=10)  # 添加超時
+            response = requests.get(url, cookies={"over18": "1"}, headers=headers, timeout=10)  # 添加超時
             if response.status_code != 200:
                 print(f"無法訪問 {url}，狀態碼：{response.status_code}")
                 continue
