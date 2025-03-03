@@ -2,7 +2,7 @@ name: PTT Scraper
 
 on:
   schedule:
-    - cron: "50 23 * * *"  # 每天 23:50 執行
+    - cron: "56 15 * * *"  # 每天 23:50 執行
   workflow_dispatch:  # 允許手動觸發
 
 jobs:
