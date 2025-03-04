@@ -18,10 +18,10 @@ def get_today_date():
 
 def get_ptt_posts(today):
     base_urls = [
-        "https://www.ptt.cc/bbs/baseball/search?q=%E5%87%B1%E7%A8%8B",
-        "https://www.ptt.cc/bbs/baseballxxxx/search?q=%E5%87%B1%E7%A8%8B",
-        "https://www.ptt.cc/bbs/elephants/search?q=%E5%87%B1%E7%A8%8B",
-        "https://www.ptt.cc/bbs/BaseballXXXX/search?q=wj" #wj
+        # "https://www.ptt.cc/bbs/baseball/search?q=%E5%87%B1%E7%A8%8B",
+        # "https://www.ptt.cc/bbs/baseballxxxx/search?q=%E5%87%B1%E7%A8%8B",
+        # "https://www.ptt.cc/bbs/elephants/search?q=%E5%87%B1%E7%A8%8B",
+        "https://www.ptt.cc/bbs/BaseballXXXX" #wj
     ]
     matched_posts = []
     max_posts = 10  # 限制最多 5 篇貼文，避免訊息過長
@@ -56,7 +56,7 @@ def get_ptt_posts(today):
             print("未找到 'over18' 按鈕，可能已經設置過或頁面有變化")
 
         for url in base_urls:
-            matched_posts.append("迴圈") #here
+            
             try:
                 driver.get(url)
                 time.sleep(random.uniform(2, 5))  # 模擬真實用戶等待
