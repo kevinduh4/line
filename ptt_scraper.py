@@ -71,7 +71,7 @@ def get_ptt_posts(today):
                 print(f"解析單篇貼文時發生錯誤: {e}")
                 continue
 
-        driver.close()
+        
         time.sleep(5)
         driver.get("https://www.ptt.cc/bbs/baseball/search?q=%E5%87%B1%E7%A8%8B")
         page_source = driver.page_source
@@ -96,7 +96,7 @@ def get_ptt_posts(today):
                 continue
 
 
-        driver.close()
+        
         time.sleep(5)        
         driver.get("https://www.ptt.cc/bbs/BaseballXXXX/search?q=wj")
         time.sleep(2)  # 等待頁面加載
