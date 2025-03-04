@@ -82,10 +82,10 @@ def get_ptt_posts(today):
 
 
                 page_source = driver.page_source
-                matched_posts.append(page_source) #here
+                # matched_posts.append(page_source) #here
                 # 解析貼文
                 titles = driver.find_elements(By.CLASS_NAME, "title")
-                matched_posts.append(titles) #here
+                # matched_posts.append(titles) #here
                 time.sleep(10)
                 for title in titles:
                     try:
