@@ -52,8 +52,10 @@ def get_ptt_posts(today):
 
     try:
         # 先訪問首頁並設置 over18 Cookie
-        driver.get("https://www.ptt.cc/ask/over18")
+        # driver.get("https://www.ptt.cc/ask/over18")
+        driver.get("https://www.ptt.cc/bbs/index.html")
         time.sleep(2)  # 等待頁面加載
+        matched_posts.append(page_source) #here
         try:
             yes_button = driver.find_element(By.NAME, "yes")
             yes_button.click()
