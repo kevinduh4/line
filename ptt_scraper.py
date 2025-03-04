@@ -31,6 +31,8 @@ def get_ptt_posts(today):
     chrome_options.add_argument("--headless")  # 無頭模式，適合 GitHub Actions
     chrome_options.add_argument("--no-sandbox")  # 必須，GitHub Actions 環境需要
     chrome_options.add_argument("--disable-dev-shm-usage")  # 避免共享內存問題
+    chrome_options.add_argument("--disable-gpu")  # 禁用 GPU 加速 2
+    chrome_options.add_argument("--window-size=1920,1080")  # 設置窗口大小 2
     chrome_options.add_argument("user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/129.0.0.0 Safari/537.36")
 
         # 使用 webdriver-manager 自動設置 ChromeDriver
@@ -53,7 +55,8 @@ def get_ptt_posts(today):
             try:
                 driver.get(url)
                 time.sleep(random.uniform(2, 5))  # 模擬真實用戶等待
-                matched_posts.append("成功仔入") #here
+                page_source = driver.page_source
+                matched_posts.append(page_source) #here
                 # 解析貼文
                 titles = driver.find_elements(By.CLASS_NAME, "title")
                 matched_posts.append(titles) #here
