@@ -71,60 +71,6 @@ def get_ptt_posts(today):
                 print(f"解析單篇貼文時發生錯誤: {e}")
                 continue
 
-        
-        time.sleep(5)
-        driver.get("https://www.ptt.cc/bbs/baseball/search?q=%E5%87%B1%E7%A8%8B")
-        page_source = driver.page_source
-        matched_posts.append(page_source) #here
-        time.sleep(2)  # 等待頁面加載
-        titles = driver.find_elements(By.CLASS_NAME, "title")
-        time.sleep(10)
-        for title in titles:
-            try:
-                a_tag = title.find_element(By.TAG_NAME, "a")
-                post_title = a_tag.text
-                post_url = a_tag.get_attribute("href")
-                post_id = post_url.split('/')[-1].split('.')[1]
-                post_time = datetime.fromtimestamp(int(post_id), timezone(timedelta(hours=8))).strftime("%Y-%m-%d")
-                        
-                if post_time == today:
-                    matched_posts.append(f"{post_title}\n {post_url}\n")
-                    if len(matched_posts) >= max_posts:
-                        break
-            except Exception as e:
-                print(f"解析單篇貼文時發生錯誤: {e}")
-                continue
-
-
-        
-        time.sleep(5)        
-        driver.get("https://www.ptt.cc/bbs/BaseballXXXX/search?q=wj")
-        time.sleep(2)  # 等待頁面加載
-        titles = driver.find_elements(By.CLASS_NAME, "title")
-        time.sleep(10)
-        for title in titles:
-            try:
-                a_tag = title.find_element(By.TAG_NAME, "a")
-                post_title = a_tag.text
-                post_url = a_tag.get_attribute("href")
-                post_id = post_url.split('/')[-1].split('.')[1]
-                post_time = datetime.fromtimestamp(int(post_id), timezone(timedelta(hours=8))).strftime("%Y-%m-%d")
-                        
-                if post_time == today:
-                    matched_posts.append(f"{post_title}\n {post_url}\n")
-                    if len(matched_posts) >= max_posts:
-                        break
-            except Exception as e:
-                print(f"解析單篇貼文時發生錯誤: {e}")
-                continue
-
-
-
-
-
-
-
-
 
     finally:
         driver.quit()

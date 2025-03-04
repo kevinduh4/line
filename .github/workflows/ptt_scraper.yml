@@ -45,7 +45,9 @@ jobs:
       
       - name: 執行 PTT 爬蟲並捕獲輸出
         run: |
-          python -u ptt_scraper.py > ptt_output.txt 2> ptt_error.txt || true
+          python -u ptt_scraper_4x.py >> ptt_output.txt 2>> ptt_error.txt || true
+          python -u ptt_scraper_ele.py >> ptt_output.txt 2>> ptt_error.txt || true
+          python -u ptt_scraper_base.py >> ptt_output.txt 2>> ptt_error.txt || true
       
       - name: 顯示 ptt_output.txt 內容
         run: cat ptt_output.txt || true
