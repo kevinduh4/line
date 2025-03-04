@@ -51,61 +51,24 @@ def get_ptt_posts(today):
 
 
     try:
-        # 先訪問首頁並設置 over18 Cookie
-        # driver.get("https://www.ptt.cc/ask/over18")
-        driver.get("https://www.ptt.cc/bbs/BaseballXXXX/index.html")
+        driver.get("https://www.ptt.cc/bbs/baseball/search?q=%E5%87%B1%E7%A8%8B")
         time.sleep(2)  # 等待頁面加載
-        page_source = driver.page_source
-        matched_posts.append(page_source) #here
-        try:
-            yes_button = driver.find_element(By.NAME, "yes")
-            yes_button.click()
-            time.sleep(2)
-        except NoSuchElementException:
-            print("未找到 'over18' 按鈕，可能已經設置過或頁面有變化")
-
-        for url in base_urls:
-            
+        titles = driver.find_elements(By.CLASS_NAME, "title")
+        time.sleep(10)
+        for title in titles:
             try:
-                driver.get(url)
-                time.sleep(random.uniform(2, 5))  # 模擬真實用戶等待
-
-                # 在這裡使用 cookies 來繞過 Cloudflare 防護
-                for cookie_name, cookie_value in cookies.items():
-                    driver.add_cookie({
-                        "name": cookie_name,
-                        "value": cookie_value,
-                        "domain": "www.ptt.cc",  # 設置適當的域名
-                    })
-
-                # 刷新頁面以應用 cookies
-                driver.refresh()
-
-
-                page_source = driver.page_source
-                # matched_posts.append(page_source) #here
-                # 解析貼文
-                titles = driver.find_elements(By.CLASS_NAME, "title")
-                # matched_posts.append(titles) #here
-                time.sleep(10)
-                for title in titles:
-                    try:
-                        a_tag = title.find_element(By.TAG_NAME, "a")
-                        post_title = a_tag.text
-                        post_url = a_tag.get_attribute("href")
-                        post_id = post_url.split('/')[-1].split('.')[1]
-                        post_time = datetime.fromtimestamp(int(post_id), timezone(timedelta(hours=8))).strftime("%Y-%m-%d")
+                a_tag = title.find_element(By.TAG_NAME, "a")
+                post_title = a_tag.text
+                post_url = a_tag.get_attribute("href")
+                post_id = post_url.split('/')[-1].split('.')[1]
+                post_time = datetime.fromtimestamp(int(post_id), timezone(timedelta(hours=8))).strftime("%Y-%m-%d")
                         
-                        if post_time == today:
-                            matched_posts.append(f"{post_title}\n {post_url}\n")
-                            if len(matched_posts) >= max_posts:
-                                break
-                    except Exception as e:
-                        print(f"解析單篇貼文時發生錯誤: {e}")
-                        continue
-
+                if post_time == today:
+                    matched_posts.append(f"{post_title}\n {post_url}\n")
+                    if len(matched_posts) >= max_posts:
+                        break
             except Exception as e:
-                print(f"訪問 {url} 時發生錯誤: {e}")
+                print(f"解析單篇貼文時發生錯誤: {e}")
                 continue
 
     finally:
