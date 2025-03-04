@@ -2,7 +2,7 @@ name: PTT Scraper
 
 on:
   schedule:
-    - cron: "50 15 * * *"  # 每天 23:50 執行
+    - cron: "45 15 * * *"  # 每天 23:45 執行
   workflow_dispatch:  # 允許手動觸發
 
 jobs:
@@ -42,22 +42,22 @@ jobs:
       - name: 顯示 ptt_error.txt 內容
         run: cat ptt_error.txt || true
       
-      - name: 檢查是否有新貼文
-        id: check_posts
-        run: |
-          if grep -q "今日 PTT 熱議:" ptt_output.txt; then
-            echo "has_posts=true" >> $GITHUB_OUTPUT
-          else
-            echo "has_posts=false" >> $GITHUB_OUTPUT
-          fi
+      # - name: 檢查是否有新貼文
+      #   id: check_posts
+      #   run: |
+      #     if grep -q "今日 PTT 熱議:" ptt_output.txt; then
+      #       echo "has_posts=true" >> $GITHUB_OUTPUT
+      #     else
+      #       echo "has_posts=false" >> $GITHUB_OUTPUT
+      #     fi
       
-      - name: 將輸出發送到 LINE Bot
-        if: steps.check_posts.outputs.has_posts == 'true'
-        run: |
-          MESSAGE=$(jq -Rs . < ptt_output.txt)  # 安全處理 JSON
-          for i in {1..2}; do
-            curl -X POST "$RENDER_API_URL/notify_ptt_post" \
-                 -H "Content-Type: application/json" \
-                 -d "{\"message\": $MESSAGE}" && break || echo "發送失敗，嘗試重試 ($i)"
-            sleep 5
-          done
+      # - name: 將輸出發送到 LINE Bot
+      #   if: steps.check_posts.outputs.has_posts == 'true'
+      #   run: |
+      #     MESSAGE=$(jq -Rs . < ptt_output.txt)  # 安全處理 JSON
+      #     for i in {1..2}; do
+      #       curl -X POST "$RENDER_API_URL/notify_ptt_post" \
+      #            -H "Content-Type: application/json" \
+      #            -d "{\"message\": $MESSAGE}" && break || echo "發送失敗，嘗試重試 ($i)"
+      #       sleep 5
+      #     done
