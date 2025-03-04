@@ -22,11 +22,9 @@ jobs:
         with:
           python-version: "3.9"
       
-      # - name: 安裝系統依賴（只需 Chrome）
-      #   run: |
-      #     sudo apt-get update
-      #     sudo apt-get install -y google-chrome-stable
-      #     google-chrome --version
+      - name: 顯示當前時間（台灣時間 UTC+8）
+        run: date -u --date='8 hour'
+
       - name: 安裝系統依賴（Chrome）
         run: |
           sudo apt-get update
