@@ -18,12 +18,7 @@ def get_today_date():
     return taiwan_now.strftime("%Y-%m-%d")
 
 def get_ptt_posts(today):
-    base_urls = [
-        # "https://www.ptt.cc/bbs/baseball/search?q=%E5%87%B1%E7%A8%8B",
-        # "https://www.ptt.cc/bbs/baseballxxxx/search?q=%E5%87%B1%E7%A8%8B",
-        # "https://www.ptt.cc/bbs/elephants/search?q=%E5%87%B1%E7%A8%8B",
-        "https://www.ptt.cc/bbs/BaseballXXXX" #wj
-    ]
+
     matched_posts = []
     max_posts = 10  # 限制最多 5 篇貼文，避免訊息過長
 
@@ -51,7 +46,7 @@ def get_ptt_posts(today):
 
 
     try:
-        driver.get("https://www.ptt.cc/bbs/BaseballXXXX/search?q=wj")
+        driver.get("https://www.ptt.cc/bbs/elephants/search?q=%E5%87%B1%E7%A8%8B")
         time.sleep(2)  # 等待頁面加載
         titles = driver.find_elements(By.CLASS_NAME, "title")
         time.sleep(10)
