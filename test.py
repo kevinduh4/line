@@ -18,41 +18,54 @@ def get_today_date():
     return taiwan_now.strftime("%Y-%m-%d")
 
 def get_ptt_posts(today):
-
     matched_posts = []
-    max_posts = 10  # 限制最多 5 篇貼文，避免訊息過長
+    max_posts = 10
 
     # 使用 cloudscraper 獲取 cookies
     scraper = cloudscraper.create_scraper()
     response = scraper.get("https://www.instagram.com/k.c.wang_15/")
     cookies = response.cookies.get_dict()
 
-
-
     # 設置 Chrome 選項
     chrome_options = Options()
-    chrome_options.add_argument("--headless")  # 無頭模式，適合 GitHub Actions
-    chrome_options.add_argument("--no-sandbox")  # 必須，GitHub Actions 環境需要
-    chrome_options.add_argument("--disable-dev-shm-usage")  # 避免共享內存問題
-    chrome_options.add_argument("--disable-gpu")  # 禁用 GPU 加速 2
-    chrome_options.add_argument("--window-size=1920,1080")  # 設置窗口大小 2
+    chrome_options.add_argument("--headless")
+    chrome_options.add_argument("--no-sandbox")
+    chrome_options.add_argument("--disable-dev-shm-usage")
+    chrome_options.add_argument("--disable-gpu")
+    chrome_options.add_argument("--window-size=1920,1080")
     chrome_options.add_argument("user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/129.0.0.0 Safari/537.36")
-    chrome_options.add_argument("--disable-extensions")  # 禁用擴展 3
-    chrome_options.add_argument("--disable-blink-features=AutomationControlled")  # 隱藏 Selenium 特徵 3
-    chrome_options.add_experimental_option("excludeSwitches", ["enable-automation"])  # 移除自動化標誌 3
+    chrome_options.add_argument("--disable-extensions")
+    chrome_options.add_argument("--disable-blink-features=AutomationControlled")
+    chrome_options.add_experimental_option("excludeSwitches", ["enable-automation"])
 
-
-
-    # 使用 webdriver-manager 自動設置 ChromeDriver
     driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=chrome_options)
 
-
     try:
+        # 將 cloudscraper 的 cookies 應用到 Selenium
+        driver.get("https://www.instagram.com/")  # 先訪問根域名以設置 cookies
+        for cookie_name, cookie_value in cookies.items():
+            driver.add_cookie({"name": cookie_name, "value": cookie_value, "domain": ".instagram.com"})
+        
+        # 訪問目標頁面
         driver.get("https://www.instagram.com/k.c.wang_15/")
-        time.sleep(2)  # 等待頁面加載
-        page_source = driver.page_source
-        matched_posts.append(page_source) #here
+        time.sleep(5)  # 增加等待時間，讓頁面完全加載
 
+        # 檢查當前 URL 和標題
+        current_url = driver.current_url
+        page_title = driver.title
+        page_source = driver.page_source
+
+        print(f"當前 URL: {current_url}")
+        print(f"頁面標題: {page_title}")
+        matched_posts.append(page_source)
+
+        # 簡單判斷是否被重定向到登入頁面
+        if "login" in current_url.lower() or "Login" in page_title:
+            print("可能被重定向到登入頁面")
+        elif "k.c.wang_15" in page_title:
+            print("成功訪問目標用戶頁面")
+        else:
+            print("未知狀態，請檢查 page_source")
 
     finally:
         driver.quit()
