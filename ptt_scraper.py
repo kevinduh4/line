@@ -48,6 +48,7 @@ def get_ptt_posts(today):
         except NoSuchElementException:
             print("未找到 'over18' 按鈕，可能已經設置過或頁面有變化")
 
+        matched_posts.append("打開瀏覽器") #here
         for url in base_urls:
             try:
                 driver.get(url)
@@ -55,6 +56,7 @@ def get_ptt_posts(today):
 
                 # 解析貼文
                 titles = driver.find_elements(By.CLASS_NAME, "title")
+
                 for title in titles:
                     try:
                         a_tag = title.find_element(By.TAG_NAME, "a")
@@ -62,6 +64,7 @@ def get_ptt_posts(today):
                         post_url = a_tag.get_attribute("href")
                         post_id = post_url.split('/')[-1].split('.')[1]
                         post_time = datetime.fromtimestamp(int(post_id), timezone(timedelta(hours=8))).strftime("%Y-%m-%d")
+                        matched_posts.append("正常拜訪") #here
 
                         if post_time == today:
                             matched_posts.append(f"{post_title}\n {post_url}\n")
