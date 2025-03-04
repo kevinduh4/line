@@ -1,3 +1,4 @@
+import cloudscraper
 import time
 import random
 from datetime import datetime, timezone, timedelta
@@ -25,6 +26,11 @@ def get_ptt_posts(today):
     ]
     matched_posts = []
     max_posts = 10  # 限制最多 5 篇貼文，避免訊息過長
+
+    # 使用 cloudscraper 獲取 cookies
+    scraper = cloudscraper.create_scraper()
+    response = scraper.get("https://www.ptt.cc/ask/over18")
+    cookies = response.cookies.get_dict()
 
     # 設置 Chrome 選項
     chrome_options = Options()
@@ -58,9 +64,21 @@ def get_ptt_posts(today):
         for url in base_urls:
             
             try:
-                time.sleep(2)
                 driver.get(url)
                 time.sleep(random.uniform(2, 5))  # 模擬真實用戶等待
+
+                # 在這裡使用 cookies 來繞過 Cloudflare 防護
+                for cookie_name, cookie_value in cookies.items():
+                    driver.add_cookie({
+                        "name": cookie_name,
+                        "value": cookie_value,
+                        "domain": "www.ptt.cc",  # 設置適當的域名
+                    })
+
+                # 刷新頁面以應用 cookies
+                driver.refresh()
+
+
                 page_source = driver.page_source
                 matched_posts.append(page_source) #here
                 # 解析貼文

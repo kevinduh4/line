@@ -41,7 +41,7 @@ jobs:
 
 
       - name: 安裝依賴
-        run: pip install selenium webdriver-manager
+        run: pip install selenium webdriver-manager cloudscraper
       
       - name: 執行 PTT 爬蟲並捕獲輸出
         run: |
