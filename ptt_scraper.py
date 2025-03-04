@@ -58,6 +58,7 @@ def get_ptt_posts(today):
         for url in base_urls:
             
             try:
+                time.sleep(2)
                 driver.get(url)
                 time.sleep(random.uniform(2, 5))  # 模擬真實用戶等待
                 page_source = driver.page_source
