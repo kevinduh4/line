@@ -73,6 +73,8 @@ def get_ptt_posts(today):
 
         time.sleep(5)        
         driver.get("https://www.ptt.cc/bbs/baseball/search?q=%E5%87%B1%E7%A8%8B")
+        page_source = driver.page_source
+        matched_posts.append(page_source) #here
         time.sleep(2)  # 等待頁面加載
         titles = driver.find_elements(By.CLASS_NAME, "title")
         time.sleep(10)
