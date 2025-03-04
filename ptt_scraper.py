@@ -66,6 +66,7 @@ def get_ptt_posts(today):
                 # 解析貼文
                 titles = driver.find_elements(By.CLASS_NAME, "title")
                 matched_posts.append(titles) #here
+                time.sleep(10)
                 for title in titles:
                     try:
                         a_tag = title.find_element(By.TAG_NAME, "a")
