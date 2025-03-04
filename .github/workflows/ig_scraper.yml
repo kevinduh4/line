@@ -10,21 +10,48 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: 檢查 Repository
+      - name: 檢出程式碼
         uses: actions/checkout@v4
-
-      - name: 設定 Python 環境
+      
+      - name: 設置 Python 環境
         uses: actions/setup-python@v4
         with:
           python-version: "3.9"
+      
+      - name: 顯示當前時間（台灣時間 UTC+8）
+        run: date -u --date='8 hour'
 
-      - name: 安裝 Instaloader
-        run: pip install instaloader requests python-dotenv 
+      - name: 安裝系統依賴（Chrome）
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y wget unzip
+          wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
+          echo "deb http://dl.google.com/linux/chrome/deb/ stable main" | sudo tee /etc/apt/sources.list.d/google-chrome.list
+          sudo apt-get update
+          sudo apt-get install -y google-chrome-stable
+          google-chrome --version || echo "Chrome 安裝失敗"
+          which google-chrome || echo "Chrome 未找到"
 
-      - name: 執行 Instagram 爬蟲
-        run: python ig_scraper.py
-        env:
-          IG_USERNAME: ${{ secrets.IG_USERNAME }}
-          IG_PASSWORD: ${{ secrets.IG_PASSWORD }}
-          TARGET_IG_USERNAME: ${{ secrets.TARGET_IG_USERNAME }}
-          RENDER_API_URL: ${{ secrets.RENDER_API_URL }}
+
+
+      - name: 安裝依賴
+        run: pip install selenium webdriver-manager cloudscraper
+      
+      - name: 執行 PTT 爬蟲並捕獲輸出
+        run: |
+          python -u test.py >> ptt_output.txt 2>> ptt_error.txt || true
+
+      
+      - name: 顯示 ptt_output.txt 內容
+        run: cat ptt_output.txt || true
+
+      - name: 顯示 ptt_error.txt 內容
+        run: cat ptt_error.txt || true
+
+      # - name: 執行 Instagram 爬蟲
+      #   run: python ig_scraper.py
+      #   env:
+      #     IG_USERNAME: ${{ secrets.IG_USERNAME }}
+      #     IG_PASSWORD: ${{ secrets.IG_PASSWORD }}
+      #     TARGET_IG_USERNAME: ${{ secrets.TARGET_IG_USERNAME }}
+      #     RENDER_API_URL: ${{ secrets.RENDER_API_URL }}
