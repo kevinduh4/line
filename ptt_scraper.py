@@ -35,7 +35,7 @@ def get_ptt_posts(today):
 
         # 使用 webdriver-manager 自動設置 ChromeDriver
     driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=chrome_options)
-
+    matched_posts.append("初始化 Chrome WebDriver") #here
 
     try:
         # 先訪問首頁並設置 over18 Cookie
@@ -45,15 +45,17 @@ def get_ptt_posts(today):
             yes_button = driver.find_element(By.NAME, "yes")
             yes_button.click()
             time.sleep(2)
+            matched_posts.append("clickyes") #here
         except NoSuchElementException:
             print("未找到 'over18' 按鈕，可能已經設置過或頁面有變化")
 
         matched_posts.append("打開瀏覽器") #here
         for url in base_urls:
+            matched_posts.append("迴圈") #here
             try:
                 driver.get(url)
                 time.sleep(random.uniform(2, 5))  # 模擬真實用戶等待
-
+                matched_posts.append("成功仔入") #here
                 # 解析貼文
                 titles = driver.find_elements(By.CLASS_NAME, "title")
 
