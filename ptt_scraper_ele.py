@@ -83,7 +83,7 @@ def main():
         today = get_today_date()
         latest_posts = get_ptt_posts(today)
         if latest_posts:
-            print("今日 PTT 熱議:")
+            # print("今日 PTT 熱議:")
             for post in latest_posts:
                 print(post)
         else:
