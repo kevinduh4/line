@@ -55,6 +55,7 @@ def get_ptt_posts(today):
         # driver.get("https://www.ptt.cc/ask/over18")
         driver.get("https://www.ptt.cc/bbs/index.html")
         time.sleep(2)  # 等待頁面加載
+        page_source = driver.page_source
         matched_posts.append(page_source) #here
         try:
             yes_button = driver.find_element(By.NAME, "yes")
@@ -94,8 +95,7 @@ def get_ptt_posts(today):
                         post_url = a_tag.get_attribute("href")
                         post_id = post_url.split('/')[-1].split('.')[1]
                         post_time = datetime.fromtimestamp(int(post_id), timezone(timedelta(hours=8))).strftime("%Y-%m-%d")
-                        matched_posts.append("正常拜訪") #here
-
+                        
                         if post_time == today:
                             matched_posts.append(f"{post_title}\n {post_url}\n")
                             if len(matched_posts) >= max_posts:
