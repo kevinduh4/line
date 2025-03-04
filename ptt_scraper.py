@@ -53,7 +53,7 @@ def get_ptt_posts(today):
     try:
         # 先訪問首頁並設置 over18 Cookie
         # driver.get("https://www.ptt.cc/ask/over18")
-        driver.get("https://www.ptt.cc/bbs/index.html")
+        driver.get("https://www.ptt.cc/bbs/BaseballXXXX/index.html")
         time.sleep(2)  # 等待頁面加載
         page_source = driver.page_source
         matched_posts.append(page_source) #here
