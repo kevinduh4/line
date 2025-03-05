@@ -2,15 +2,16 @@ from googleapiclient.discovery import build # API client library
 from googleapiclient.errors import HttpError
 import datetime
 import csv
+import os
 
-YOUTUBE_API_KEY = "AIzaSyBUogBT-NxSk2SN0tUZK1oOa4gF6WDK6DM"
+
+YOUTUBE_API_KEY = os.getenv("YOUTUBE_API_KEY")
 DEVELOPER_KEY = YOUTUBE_API_KEY
 youtube = build('youtube', 'v3', developerKey=DEVELOPER_KEY)
-# print(youtube)
 
-# channel_id_list = ['UCVmS1iP5PP2wZxpY1IGtoQg']
-channel_id_list = ['UCMNRAapvcYtQks_QmfiTGkA']
 
+# channel_id_list = ['UCMNRAapvcYtQks_QmfiTGkA']
+channel_id_list = os.getenv("channel_id_list")
 
 def get_channel_videos(channel_id):
     # 獲取頻道的 "Uploads" 播放清單 ID
