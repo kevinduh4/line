@@ -77,12 +77,12 @@ def main():
         # 在程式開始時固定當天的日期
         today = get_today_date()
         latest_posts = get_ptt_posts(today)
-        if latest_posts:
-            print("今日 PTT 熱議:")
-            for post in latest_posts:
-                print(post)
-        else:
-            print("今天沒有新貼文")
+        # if latest_posts:
+        #     print("今日 PTT 熱議:")
+        for post in latest_posts:
+            print(post)
+        # else:
+        #     print("今天沒有新貼文")
     except Exception as e:
         print(f"執行錯誤: {e}")
         exit(1)
