@@ -46,7 +46,8 @@ def get_ptt_posts(today):
 
 
     try:
-        driver.get("https://www.ptt.cc/bbs/elephants/search?q=%E5%87%B1%E7%A8%8B")
+        # driver.get("https://www.ptt.cc/bbs/elephants/search?q=%E5%87%B1%E7%A8%8B")
+        driver.get("https://www.ptt.cc/bbs/Baseball/search?q=%E4%B8%AD%E5%9C%8B")
         time.sleep(2)  # 等待頁面加載
         titles = driver.find_elements(By.CLASS_NAME, "title")
         time.sleep(10)
