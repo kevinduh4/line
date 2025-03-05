@@ -82,13 +82,13 @@ jobs:
       #       echo "has_posts=false" >> $GITHUB_OUTPUT
       #     fi
       
-      # - name: 將輸出發送到 LINE Bot
-      #   if: steps.format_output.outputs.has_posts == 'true'
-      #   run: |
-      #     MESSAGE=$(jq -Rs . < formatted_output.txt || echo '""')  # 安全處理 JSON
-      #     for i in {1..5}; do
-      #       curl --max-time 30 -X POST "$RENDER_API_URL/notify_ptt_post" \
-      #            -H "Content-Type: application/json" \
-      #            -d "{\"message\": $MESSAGE}" && break || echo "發送失敗，嘗試重試 ($i)"
-      #       sleep 20
-      #     done
+      - name: 將輸出發送到 LINE Bot
+        if: steps.format_output.outputs.has_posts == 'true'
+        run: |
+          MESSAGE=$(jq -Rs . < formatted_output.txt || echo '""')  # 安全處理 JSON
+          for i in {1..5}; do
+            curl --max-time 30 -X POST "$RENDER_API_URL/notify_ptt_post" \
+                 -H "Content-Type: application/json" \
+                 -d "{\"message\": $MESSAGE}" && break || echo "發送失敗，嘗試重試 ($i)"
+            sleep 20
+          done
