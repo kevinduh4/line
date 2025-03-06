@@ -1,7 +1,7 @@
 name: Daily Instagram Scraper
 
 on:
-  schedule:
+  # schedule:
     # - cron: "30 3 * * *"  # 每天台灣時間 11:30 AM 執行
   workflow_dispatch:  # 允許手動觸發
 
