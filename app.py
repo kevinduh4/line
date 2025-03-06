@@ -79,6 +79,19 @@ def handle_follow(event):
     )
 
 
+@app.route("/notify_youtube", methods=["POST"])
+def notify_youtube():
+    data = request.get_json()
+    message = data.get("message", "YouTube 爬蟲通知失敗")
+
+    try:
+        line_bot_api.push_message(LINE_USER_ID, TextSendMessage(text=message))
+        return jsonify({"status": "success", "message": "YouTube 影片通知已發送"}), 200
+    except Exception as e:
+        return jsonify({"status": "error", "message": str(e)}), 500
+
+
+
 
 # --------------爬蟲，凱程ig發文便推送-------壞掉，基本做不到
 @app.route("/notify_ig_post", methods=["POST"])
