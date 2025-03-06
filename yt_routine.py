@@ -13,8 +13,8 @@ RENDER_API_URL = os.getenv("RENDER_API_URL")
 api_url = f"{RENDER_API_URL}/notify_youtube"
 
 
-# channel_id_list = ['UCMNRAapvcYtQks_QmfiTGkA']
-channel_id_list = os.getenv("channel_id_list")
+channel_id_list = ['UCMNRAapvcYtQks_QmfiTGkA']
+# channel_id_list = os.getenv("channel_id_list")
 
 # 取得頻道的影片清單（只取第一頁）
 def get_channel_videos(channel_id):

@@ -15,7 +15,7 @@ jobs:
 
       - name: 🚀 喚醒 Render 應用
         env:
-          YOUTUBE_API_KEY: ${{ secrets.YOUTUBE_API_KEY }}
+          # YOUTUBE_API_KEY: ${{ secrets.YOUTUBE_API_KEY }}
           RENDER_API_URL: ${{ secrets.RENDER_API_URL }}
         run: |
           curl -X GET "$RENDER_API_URL"
@@ -34,7 +34,7 @@ jobs:
 
       - name: 🕵️‍♂️ 執行 YouTube 爬蟲
         env:
-          YOUTUBE_API_KEY: ${{ secrets.YOUTUBE_API_KEY }}
+          # YOUTUBE_API_KEY: ${{ secrets.YOUTUBE_API_KEY }}
           RENDER_API_URL: ${{ secrets.RENDER_API_URL }}
         run: |
           python yt_routine.py  # 假設你的爬蟲程式叫 `youtube_crawler.py`
