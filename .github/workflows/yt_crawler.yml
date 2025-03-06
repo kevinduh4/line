@@ -38,3 +38,18 @@ jobs:
           RENDER_API_URL: ${{ secrets.RENDER_API_URL }}
         run: |
           python yt_routine.py  # 假設你的爬蟲程式叫 `youtube_crawler.py`
+
+
+      - name: Commit and push changes
+        run: |
+          git config --global user.name "GitHub Action"
+          git config --global user.email "action@github.com"
+          git add brothers_videos.csv
+          # 檢查是否有變更，若無則跳過提交
+          if git diff --staged --quiet; then
+            echo "沒有變更需要提交"
+          else
+            git commit -m "Update brothers_videos.csv with new videos"
+            git push
+            echo "成功推送更新到 GitHub"
+          fi
