@@ -85,7 +85,8 @@ def notify_youtube():
     message = data.get("message", "YouTube 爬蟲通知失敗")
 
     try:
-        line_bot_api.push_message(LINE_USER_ID, TextSendMessage(text=message))
+        # line_bot_api.push_message(LINE_USER_ID, TextSendMessage(text=message))
+        line_bot_api.broadcast(TextSendMessage(text=message))
         return jsonify({"status": "success", "message": "YouTube 影片通知已發送"}), 200
     except Exception as e:
         return jsonify({"status": "error", "message": str(e)}), 500
@@ -114,7 +115,8 @@ def notify_ptt_post():
     # message = f"今日 PTT 熱議:\n{raw_message}"  # 在開頭新增標題
 
     try:
-        line_bot_api.push_message(LINE_USER_ID, TextSendMessage(text=message))
+        # line_bot_api.push_message(LINE_USER_ID, TextSendMessage(text=message))
+        line_bot_api.broadcast(TextSendMessage(text=message))
         return jsonify({"status": "success", "message": "通知已發送"}), 200
     except Exception as e:
         return jsonify({"status": "error", "message": str(e)}), 500
