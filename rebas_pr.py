@@ -66,7 +66,7 @@ if __name__ == "__main__":
     imgur_url = upload_to_imgur(IMAGE_PATH, CLIENT_ID)
     print("最終圖片連結:", imgur_url)
 
-    render_api_url = f"{os.getenv("RENDER_API_URL")}/rebas_pr"
+    render_api_url = f"{os.getenv('RENDER_API_URL')}/rebas_pr"
     payload = {"image_url": imgur_url}
     try:
         response = requests.post(render_api_url, json=payload, timeout=30)
