@@ -1,0 +1,40 @@
+name: Rebas PrChart Crawler
+
+on:
+  schedule:
+    - cron: "00 02 * * *"  # UTC 時間 02:00，相當於台灣時間 10:
+  workflow_dispatch:  # 允許手動觸發
+
+jobs:
+  run-crawler:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 🔄 檢出專案程式碼
+        uses: actions/checkout@v4
+
+      - name: 🚀 喚醒 Render 應用
+        env:
+          RENDER_API_URL: ${{ secrets.RENDER_API_URL }}
+          # CLIENT_ID : ${{ secrets.IMGUR_CLIENT_ID }}
+        run: |
+          curl -X GET "$RENDER_API_URL"
+
+      - name: ⏳ 等待 1 分鐘，確保 Render 完全啟動
+        run: sleep 60
+
+      - name: 🐍 設定 Python 環境
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.9"
+
+      - name: 📦 安裝相依套件
+        run: |
+          pip install selenium webdriver-manager cloudscraper requests pyimgur os
+
+      - name: 🕵️‍♂️ 執行 Rebas 爬蟲
+        env:
+          RENDER_API_URL: ${{ secrets.RENDER_API_URL }}
+          CLIENT_ID : ${{ secrets.IMGUR_CLIENT_ID }}
+        run: |
+          python rebas_pr.py  # 假設你的爬蟲程式叫 `rebas_pr.py`

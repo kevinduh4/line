@@ -7,6 +7,7 @@ from linebot.exceptions import LineBotApiError
 import os
 import random
 import json
+from datetime import date, datetime
 
 
 
@@ -92,6 +93,23 @@ def notify_youtube():
         return jsonify({"status": "error", "message": str(e)}), 500
 
 
+@app.route("/rebas_pr", methods=["POST"])
+def rebas_pr():
+    data = request.get_json()
+    Pr_image_url = data["image_url"]
+    today = date.today()
+    if today.weekday() == 0:
+        try:
+            line_bot_api.broadcast([
+                TextSendMessage(text=f"數據截至{today}"),
+                ImageSendMessage(original_content_url=Pr_image_url, preview_image_url=Pr_image_url)
+            ])
+            return jsonify({"status": "success", "message": "PrChart已發送"}), 200
+        except Exception as e:
+            return jsonify({"status": "error", "message": str(e)}), 500
+    else:
+        print("今天不是星期一")
+        return jsonify({"status": "skipped", "message": "今天不是星期一"}), 200  # 添加回應
 
 
 # --------------爬蟲，凱程ig發文便推送-------壞掉，基本做不到
