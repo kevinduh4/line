@@ -30,7 +30,7 @@ jobs:
 
       - name: 📦 安裝相依套件
         run: |
-          pip install selenium webdriver-manager cloudscraper requests pyimgur os
+          pip install selenium webdriver-manager cloudscraper requests pyimgur
 
       - name: 🕵️‍♂️ 執行 Rebas 爬蟲
         env:
