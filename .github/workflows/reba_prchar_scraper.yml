@@ -28,6 +28,18 @@ jobs:
         with:
           python-version: "3.9"
 
+      - name: 安裝系統依賴（Chrome）
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y wget unzip
+          wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
+          echo "deb http://dl.google.com/linux/chrome/deb/ stable main" | sudo tee /etc/apt/sources.list.d/google-chrome.list
+          sudo apt-get update
+          sudo apt-get install -y google-chrome-stable
+          google-chrome --version || echo "Chrome 安裝失敗"
+          which google-chrome || echo "Chrome 未找到"
+
+
       - name: 📦 安裝相依套件
         run: |
           pip install selenium webdriver-manager cloudscraper requests pyimgur

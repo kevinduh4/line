@@ -17,6 +17,16 @@ jobs:
       - name: 檢出程式碼
         uses: actions/checkout@v4
       
+      - name: 🚀 喚醒 Render 應用
+        env:
+          RENDER_API_URL: ${{ secrets.RENDER_API_URL }}
+          # CLIENT_ID : ${{ secrets.IMGUR_CLIENT_ID }}
+        run: |
+          curl -X GET "$RENDER_API_URL"
+
+      - name: ⏳ 等待 1 分鐘，確保 Render 完全啟動
+        run: sleep 60
+              
       - name: 設置 Python 環境
         uses: actions/setup-python@v4
         with:

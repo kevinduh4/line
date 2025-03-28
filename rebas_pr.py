@@ -1,12 +1,17 @@
 from selenium import webdriver
-from selenium.webdriver.common.by import By
-from selenium.webdriver.edge.service import Service
+# from selenium.webdriver.edge.service import Service
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-from webdriver_manager.microsoft import EdgeChromiumDriverManager
+# from webdriver_manager.microsoft import EdgeChromiumDriverManager
 import pyimgur
 import os
 import requests
+import time
+from selenium.webdriver.chrome.service import Service
+from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.common.by import By
+from selenium.common.exceptions import NoSuchElementException
+from webdriver_manager.chrome import ChromeDriverManager
 
 # Imgur API 設定
 CLIENT_ID = os.getenv("IMGUR_CLIENT_ID")
@@ -15,14 +20,34 @@ IMAGE_PATH = "prChart_svg.png"
 
 def capture_svg_screenshot(url, save_path):
     """使用 Selenium 擷取 SVG 截圖並儲存"""
-    options = webdriver.EdgeOptions()
-    options.add_argument("--headless")  # 無頭模式
-    options.add_argument("--window-size=1920,1080")  # 避免 SVG 沒載入
+    # options = webdriver.EdgeOptions()
+    # options.add_argument("--headless")  # 無頭模式
+    # options.add_argument("--window-size=1920,1080")  # 避免 SVG 沒載入
 
-    service = Service(EdgeChromiumDriverManager().install())
-    driver = webdriver.Edge(service=service, options=options)
+    # service = Service(EdgeChromiumDriverManager().install())
+    # driver = webdriver.Edge(service=service, options=options)
+
+    # 設置 Chrome 選項
+    chrome_options = Options()
+    chrome_options.add_argument("--headless")  # 無頭模式，適合 GitHub Actions
+    chrome_options.add_argument("--no-sandbox")  # 必須，GitHub Actions 環境需要
+    chrome_options.add_argument("--disable-dev-shm-usage")  # 避免共享內存問題
+    chrome_options.add_argument("--disable-gpu")  # 禁用 GPU 加速 2
+    chrome_options.add_argument("--window-size=1920,1080")  # 設置窗口大小 2
+    chrome_options.add_argument("user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/129.0.0.0 Safari/537.36")
+    chrome_options.add_argument("--disable-extensions")  # 禁用擴展 3
+    chrome_options.add_argument("--disable-blink-features=AutomationControlled")  # 隱藏 Selenium 特徵 3
+    chrome_options.add_experimental_option("excludeSwitches", ["enable-automation"])  # 移除自動化標誌 3
+
+
+
+    # 使用 webdriver-manager 自動設置 ChromeDriver
+    driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=chrome_options)
+
+
 
     driver.get(url)
+    time.sleep(2)
 
     try:
         # 等待 SVG 載入
@@ -35,6 +60,7 @@ def capture_svg_screenshot(url, save_path):
 
         # 捲動到 SVG 位置
         driver.execute_script("arguments[0].scrollIntoView();", svg_element)
+        time.sleep(2)
 
         # 擷取 SVG 截圖
         svg_element.screenshot(save_path)
