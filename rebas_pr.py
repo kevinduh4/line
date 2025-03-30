@@ -91,6 +91,7 @@ def upload_to_imgbb(image_path, api_key):
 
     if response.status_code == 200:
         image_data = response.json()["data"]
+        print("完整 API 回傳:", response.json())  # ✅ 新增這一行來檢查
         return image_data["display_url"]  # ✅ 這裡會回傳 .png 結尾的連結
     else:
         print("上傳失敗:", response.text)
