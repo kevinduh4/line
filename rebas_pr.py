@@ -14,7 +14,7 @@ from selenium.common.exceptions import NoSuchElementException
 from webdriver_manager.chrome import ChromeDriverManager
 
 # Imgur API 設定
-CLIENT_ID = os.getenv("IMGUR_CLIENT_ID")
+CLIENT_ID = os.getenv("IMGUR_CLIENT_ID") #沒用到了，改用imgbb
 IMAGE_PATH = "prChart_svg.png"
 IMGBB_API_KEY = os.getenv("IMGBB_API_KEY")
 
@@ -74,12 +74,12 @@ def capture_svg_screenshot(url, save_path):
         driver.quit()
 
 
-def upload_to_imgur(image_path, client_id):
-    """將圖片上傳到 Imgur 並回傳短網址"""
-    im = pyimgur.Imgur(client_id)
-    uploaded_image = im.upload_image(image_path, title="prChart Screenshot")
-    print("圖片短網址:", uploaded_image.link)
-    return uploaded_image.link
+# def upload_to_imgur(image_path, client_id):
+#     """將圖片上傳到 Imgur 並回傳短網址"""
+#     im = pyimgur.Imgur(client_id)
+#     uploaded_image = im.upload_image(image_path, title="prChart Screenshot")
+#     print("圖片短網址:", uploaded_image.link)
+#     return uploaded_image.link
 
 def upload_to_imgbb(image_path, api_key):
     """使用 ImgBB API 上傳圖片並回傳圖片連結"""
