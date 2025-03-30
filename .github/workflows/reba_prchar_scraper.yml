@@ -48,5 +48,6 @@ jobs:
         env:
           RENDER_API_URL: ${{ secrets.RENDER_API_URL }}
           CLIENT_ID : ${{ secrets.IMGUR_CLIENT_ID }}
+          IMGBB_API_KEY : ${{ secrets.IMGBB_API_KEY }}
         run: |
           python rebas_pr.py  # 假設你的爬蟲程式叫 `rebas_pr.py`

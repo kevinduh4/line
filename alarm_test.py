@@ -42,11 +42,11 @@ try:
                 )
                 match_time = match_info.text.strip()  # 直接抓取文本內容
                 print("比賽時間:", match_time)
-                # match_no1 = WebDriverWait(driver, 10).until(
-                #     EC.presence_of_element_located((By.CSS_SELECTOR, "div.Tags div.tag game_no"))
-                # )
-                # match_no2 = match_no1.text.strip()  # 直接抓取文本內容
-                # print("比賽編號:", match_no2)
+                match_no1 = WebDriverWait(driver, 10).until(
+                    EC.presence_of_element_located((By.CSS_SELECTOR, "div.Tags div.tag.game_no a"))
+                )
+                match_no2 = match_no1.text.strip()  # 直接抓取文本內容
+                print("比賽編號:", match_no2)
             except Exception as e:
                 print("找不到比賽時間，可能需要更新 XPath")
 

@@ -16,6 +16,7 @@ from webdriver_manager.chrome import ChromeDriverManager
 # Imgur API 設定
 CLIENT_ID = os.getenv("IMGUR_CLIENT_ID")
 IMAGE_PATH = "prChart_svg.png"
+IMGBB_API_KEY = os.getenv("IMGBB_API_KEY")
 
 
 def capture_svg_screenshot(url, save_path):
@@ -80,6 +81,21 @@ def upload_to_imgur(image_path, client_id):
     print("圖片短網址:", uploaded_image.link)
     return uploaded_image.link
 
+def upload_to_imgbb(image_path, api_key):
+    """使用 ImgBB API 上傳圖片並回傳圖片連結"""
+    url = "https://api.imgbb.com/1/upload"
+    with open(image_path, "rb") as file:
+        payload = {"key": api_key}
+        files = {"image": file}  # 這裡應該用 "image"，符合 ImgBB API
+        response = requests.post(url, data=payload, files=files)
+
+    if response.status_code == 200:
+        image_data = response.json()["data"]
+        return image_data["display_url"]  # ✅ 這裡會回傳 .png 結尾的連結
+    else:
+        print("上傳失敗:", response.text)
+        return None
+
 
 if __name__ == "__main__":
     # 設定目標網址
@@ -89,8 +105,13 @@ if __name__ == "__main__":
     capture_svg_screenshot(target_url, IMAGE_PATH)
 
     # 上傳到 Imgur
-    imgur_url = upload_to_imgur(IMAGE_PATH, CLIENT_ID)
-    print("最終圖片連結:", imgur_url)
+    # imgur_url = upload_to_imgur(IMAGE_PATH, CLIENT_ID)
+    # print("最終圖片連結:", imgur_url)
+
+
+    # 上傳到 ImgBB
+    imgur_url = upload_to_imgbb(IMAGE_PATH, IMGBB_API_KEY)
+    print("圖片短網址:", imgur_url)
 
     render_api_url = f"{os.getenv('RENDER_API_URL')}/rebas_pr"
     payload = {"image_url": imgur_url}
