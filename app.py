@@ -124,20 +124,20 @@ def notify_ig_post():
     except Exception as e:
         return jsonify({"status": "error", "message": str(e)}), 500
     
-    
+ 
 # --------------爬蟲，凱程ptt發文便推送
-@app.route("/notify_ptt_post", methods=["POST"])
-def notify_ptt_post():
-    data = request.get_json()
-    message = data.get("message", "PTT 爬蟲通知失敗")
-    # message = f"今日 PTT 熱議:\n{raw_message}"  # 在開頭新增標題
+# @app.route("/notify_ptt_post", methods=["POST"])
+# def notify_ptt_post():
+#     data = request.get_json()
+#     message = data.get("message", "PTT 爬蟲通知失敗")
+#     # message = f"今日 PTT 熱議:\n{raw_message}"  # 在開頭新增標題
 
-    try:
-        # line_bot_api.push_message(LINE_USER_ID, TextSendMessage(text=message))
-        line_bot_api.broadcast(TextSendMessage(text=message))
-        return jsonify({"status": "success", "message": "通知已發送"}), 200
-    except Exception as e:
-        return jsonify({"status": "error", "message": str(e)}), 500
+#     try:
+#         # line_bot_api.push_message(LINE_USER_ID, TextSendMessage(text=message))
+#         line_bot_api.broadcast(TextSendMessage(text=message))
+#         return jsonify({"status": "success", "message": "通知已發送"}), 200
+#     except Exception as e:
+#         return jsonify({"status": "error", "message": str(e)}), 500
 
 
 
